@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 
 const BATCH_SIZE = 20;
-const CONCURRENCY = 3;
+const CONCURRENCY = 1;
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.GEMINI_API_KEY;

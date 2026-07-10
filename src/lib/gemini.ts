@@ -7,9 +7,9 @@ import {
   type SkippedRow,
 } from "./types";
 
-const MODEL_NAME = "gemini-2.0-flash";
-const MAX_RETRIES = 2;
-const RETRY_BASE_DELAY_MS = 800;
+const MODEL_NAME = "gemini-2.5-flash";
+const MAX_RETRIES = 3;
+const RETRY_BASE_DELAY_MS = 5000;
 
 interface RawAiResponse {
   records?: Partial<CrmRecord>[];
