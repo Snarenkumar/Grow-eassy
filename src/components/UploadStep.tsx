@@ -86,7 +86,7 @@ export function UploadStep({ onFileSelected, error }: UploadStepProps) {
         ref={inputRef}
         onChange={(e) => handleFiles(e.target.files)}
         accept=".csv"
-        className="hidden"
+        className="sr-only"
       />
 
       {error && (
