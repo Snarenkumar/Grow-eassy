@@ -377,7 +377,7 @@ function TabButton({
       onClick={onClick}
       className={cn(
         "rounded-lg px-4 py-2 text-xs font-bold transition-all duration-200",
-        active ? "bg-accent text-white shadow-sm" : "text-ink-muted hover:text-ink"
+        active ? "bg-accent text-accent-ink shadow-sm" : "text-ink-muted hover:text-ink"
       )}
     >
       {children}

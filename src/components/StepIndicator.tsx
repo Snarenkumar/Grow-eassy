@@ -15,7 +15,7 @@ export function StepIndicator({ current }: { current: number }) {
               <span
                 className={cn(
                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] font-medium transition-colors",
-                  state === "done" && "bg-accent text-white",
+                  state === "done" && "bg-accent text-accent-ink",
                   state === "active" &&
                     "bg-accent-soft text-accent-ink ring-1 ring-inset ring-accent-line",
                   state === "todo" && "bg-paper text-ink-faint border border-border"

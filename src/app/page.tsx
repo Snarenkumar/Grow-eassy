@@ -246,18 +246,34 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-200">
-      <header className="border-b border-border bg-surface/85 backdrop-blur sticky top-0 z-30 shadow-sm">
+      <header className="border-b border-border bg-surface/80 backdrop-blur-md sticky top-0 z-30 shadow-sm">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-white shadow-md">
-              <Sparkles className="h-5 w-5 animate-pulse" />
-            </div>
+          <div className="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 44 44" className="h-10 w-10 shrink-0 rounded-xl shadow-md">
+              <g clipPath="url(#groweasy_svg__a)">
+                <rect width="43" height="43" x="0.5" y="0.5" fill="#0F0F0F" rx="9.594"></rect>
+                <path fill="#FBFBFB" d="m28.282 22.731-21.5 21.501-6.795-6.794 21.5-21.501z"></path>
+                <path fill="#FBFBFB" d="M8.877 15.938H28.28v6.795H8.877z"></path>
+                <path fill="#FBFBFB" d="M28.28 15.938V35.34h-6.794V15.938z"></path>
+                <path fill="#FBFBFB" d="M28.28 15.938V35.34h-6.793V15.938z"></path>
+              </g>
+              <defs>
+                <clipPath id="groweasy_svg__a">
+                  <rect width="43" height="43" x="0.5" y="0.5" fill="#fff" rx="9.594"></rect>
+                </clipPath>
+              </defs>
+            </svg>
             <div>
-              <p className="font-display font-bold text-ink text-base tracking-tight leading-tight">
-                GrowEasy CSV Importer
-              </p>
-              <p className="text-[11px] text-ink-faint leading-tight mt-0.5">
-                AI CRM Field Mapper
+              <div className="flex items-center">
+                <span className="font-display font-black text-ink text-lg tracking-tighter uppercase leading-none">
+                  GrowEasy
+                </span>
+                <span className="ml-2 px-2 py-0.5 text-[9px] font-mono font-black uppercase bg-accent text-accent-ink rounded tracking-wider leading-none shadow-sm">
+                  CSV Importer
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-ink-faint mt-1 uppercase tracking-wider">
+                Intelligent Lead Parser
               </p>
             </div>
           </div>
@@ -343,7 +359,7 @@ export default function Home() {
               <a
                 href="/groweasy-test-leads.csv"
                 download
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent text-white px-5 py-3 text-sm font-semibold hover:bg-accent-ink transition-colors shadow-md hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent text-accent-ink px-5 py-3 text-sm font-bold hover:opacity-90 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] shrink-0"
               >
                 <Download className="h-4 w-4" /> Download Test CSV
               </a>

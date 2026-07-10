@@ -1,56 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  /* Signal Console palette — cool paper + one confident signal-blue accent */
-  --color-paper: #f2f3f7;
+  --color-paper: #f4f4f5;
   --color-surface: #ffffff;
-  --color-border: #e3e5ee;
-  --color-border-strong: #cdd0dd;
+  --color-border: #e4e4e7;
+  --color-border-strong: #a1a1aa;
 
-  --color-ink: #12141c;
-  --color-ink-muted: #5b5f70;
-  --color-ink-faint: #9195a6;
+  --color-ink: #09090b;
+  --color-ink-muted: #52525b;
+  --color-ink-faint: #71717a;
 
-  --color-accent: #3452e1;
-  --color-accent-ink: #1f35b0;
-  --color-accent-soft: #ebeeff;
-  --color-accent-line: #c7cffb;
+  --color-accent: #ca8a04;
+  --color-accent-ink: #ffffff;
+  --color-accent-soft: #fef08a;
+  --color-accent-line: #ca8a04;
 
-  --color-success: #0f8f5b;
-  --color-success-soft: #e3f6ed;
-  --color-warning: #b4650b;
-  --color-warning-soft: #fbeedd;
-  --color-danger: #c22e2e;
-  --color-danger-soft: #fbeaea;
+  --color-success: #16a34a;
+  --color-success-soft: #dcfce7;
+  --color-warning: #ea580c;
+  --color-warning-soft: #ffedd5;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fee2e2;
 
-  --shadow-card: 0 1px 2px rgba(18, 20, 28, 0.04), 0 8px 24px -12px rgba(18, 20, 28, 0.12);
-  --shadow-card-hover: 0 2px 4px rgba(18, 20, 28, 0.06), 0 16px 32px -12px rgba(18, 20, 28, 0.16);
+  --shadow-card: 0 1px 2px rgba(9, 9, 11, 0.05), 0 8px 24px -12px rgba(9, 9, 11, 0.08);
+  --shadow-card-hover: 0 2px 4px rgba(9, 9, 11, 0.08), 0 16px 32px -12px rgba(9, 9, 11, 0.12);
 }
 
 :root.dark {
-  --color-paper: #090b11;
-  --color-surface: #121622;
-  --color-border: #1f273d;
-  --color-border-strong: #2f3b5c;
+  --color-paper: #0a0a0a;
+  --color-surface: #121212;
+  --color-border: #242427;
+  --color-border-strong: #3f3f46;
 
-  --color-ink: #f1f3f9;
-  --color-ink-muted: #a3abbf;
-  --color-ink-faint: #6c7893;
+  --color-ink: #f4f4f5;
+  --color-ink-muted: #a1a1aa;
+  --color-ink-faint: #71717a;
 
-  --color-accent: #5875f5;
-  --color-accent-ink: #c7cffb;
-  --color-accent-soft: #18224b;
-  --color-accent-line: #2d3f82;
+  --color-accent: #facc15;
+  --color-accent-ink: #0a0a0a;
+  --color-accent-soft: #272208;
+  --color-accent-line: #facc15;
 
-  --color-success: #12b77a;
-  --color-success-soft: #0c3325;
-  --color-warning: #e68a14;
-  --color-warning-soft: #382104;
-  --color-danger: #f04444;
-  --color-danger-soft: #3d0c0c;
+  --color-success: #22c55e;
+  --color-success-soft: #052e16;
+  --color-warning: #f97316;
+  --color-warning-soft: #431407;
+  --color-danger: #ef4444;
+  --color-danger-soft: #450a0a;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
-  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.4), 0 16px 32px -12px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.5), 0 16px 32px -12px rgba(0, 0, 0, 0.7);
 }
 
 @theme inline {
@@ -82,17 +81,17 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   background-image: 
-    radial-gradient(at 5% 5%, rgba(52, 82, 225, 0.04) 0px, transparent 40%),
-    radial-gradient(at 95% 5%, rgba(15, 143, 91, 0.04) 0px, transparent 40%),
-    radial-gradient(at 50% 95%, rgba(52, 82, 225, 0.03) 0px, transparent 50%);
+    radial-gradient(at 5% 5%, rgba(250, 204, 21, 0.02) 0px, transparent 40%),
+    radial-gradient(at 95% 5%, rgba(244, 244, 245, 0.02) 0px, transparent 40%),
+    radial-gradient(at 50% 95%, rgba(250, 204, 21, 0.01) 0px, transparent 50%);
   background-attachment: fixed;
 }
 
 :root.dark body {
   background-image: 
-    radial-gradient(at 5% 5%, rgba(88, 117, 245, 0.1) 0px, transparent 40%),
-    radial-gradient(at 95% 5%, rgba(18, 183, 122, 0.08) 0px, transparent 40%),
-    radial-gradient(at 50% 95%, rgba(88, 117, 245, 0.06) 0px, transparent 50%);
+    radial-gradient(at 5% 5%, rgba(250, 204, 21, 0.05) 0px, transparent 45%),
+    radial-gradient(at 95% 5%, rgba(36, 36, 39, 0.2) 0px, transparent 45%),
+    radial-gradient(at 50% 95%, rgba(250, 204, 21, 0.02) 0px, transparent 50%);
 }
 
 h1, h2, h3, h4 {
