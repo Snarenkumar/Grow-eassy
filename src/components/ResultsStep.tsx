@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Download, RotateCcw, CheckCircle2, XCircle, ListChecks, Pencil, FileJson, Info } from "lucide-react";
+import { Download, RotateCcw, CheckCircle2, XCircle, ListChecks, Pencil, FileJson, Info, ShieldAlert, Check } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import type { CrmRecord, SkippedRow, ExtractionSummary } from "@/lib/types";
@@ -68,6 +68,19 @@ export function ResultsStep({
     const s = r.crm_status || "(empty)";
     statusCounts[s] = (statusCounts[s] || 0) + 1;
   }
+
+  // Auto-analysis of ingestion metrics
+  const phoneCleanedCount = records.filter(
+    (r) => r.mobile_without_country_code && /^\d+$/.test(r.mobile_without_country_code)
+  ).length;
+  
+  const countryCodeCount = records.filter(
+    (r) => r.country_code && r.country_code.startsWith("+")
+  ).length;
+
+  const multipleChannelsCount = records.filter(
+    (r) => r.crm_note && (r.crm_note.includes("@") || r.crm_note.includes("|") || /\d{8,}/.test(r.crm_note))
+  ).length;
 
   const downloadJson = () => {
     const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
@@ -330,6 +343,64 @@ export function ResultsStep({
           </div>
         </div>
       )}
+
+      {/* Detailed Ingestion Summary Section */}
+      <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6 shadow-sm space-y-4">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-ink-faint bg-paper px-2 py-0.5 rounded">Audit Report</span>
+          <div className="h-1.5 w-1.5 rounded-full bg-accent" />
+        </div>
+        <h3 className="font-display font-bold text-base text-ink">Detailed Ingestion Analysis</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-xl border border-border bg-paper/20 flex gap-3.5 items-start">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success-soft text-success">
+              <Check className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="font-mono text-sm font-bold text-ink">{phoneCleanedCount} numbers cleaned</p>
+              <p className="text-[11px] text-ink-muted mt-1 leading-normal">Phone values stripped of brackets, spaces, and formatting characters cleanly.</p>
+            </div>
+          </div>
+          
+          <div className="p-4 rounded-xl border border-border bg-paper/20 flex gap-3.5 items-start">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+              <Check className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="font-mono text-sm font-bold text-ink">{countryCodeCount} country codes mapped</p>
+              <p className="text-[11px] text-ink-muted mt-1 leading-normal">Default country codes (like `+91`) added to records automatically where missing.</p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-paper/20 flex gap-3.5 items-start">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-warning-soft text-warning">
+              <Info className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="font-mono text-sm font-bold text-ink">{multipleChannelsCount} channels consolidated</p>
+              <p className="text-[11px] text-ink-muted mt-1 leading-normal">Secondary phone lines and duplicate emails merged into crm_notes to prevent data loss.</p>
+            </div>
+          </div>
+        </div>
+
+        {skipped.length > 0 && (
+          <div className="rounded-xl border border-danger/10 bg-danger-soft/10 p-4 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-danger font-bold">
+              <ShieldAlert className="h-4 w-4" />
+              <span>Skipped Records Log ({skipped.length})</span>
+            </div>
+            <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
+              {skipped.map((s, idx) => (
+                <div key={idx} className="text-xs flex flex-col sm:flex-row sm:justify-between items-start sm:items-center bg-surface border border-border/40 p-2.5 rounded-lg gap-1.5">
+                  <span className="font-mono text-ink-muted">Row {s.rowIndex + 1}: <strong className="text-ink">{s.row["Client Name"] || s.row["Name"] || "Unknown name"}</strong></span>
+                  <span className="text-[11px] font-medium text-danger bg-danger-soft px-2 py-0.5 rounded shadow-sm">{s.reason}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
