@@ -65,14 +65,6 @@ export function UploadStep({ onFileSelected, error }: UploadStepProps) {
         {/* Soft glowing ambient circle behind upload icon */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-accent/5 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-500" />
         
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".csv,text/csv"
-          className="sr-only"
-          onChange={(e) => handleFiles(e.target.files)}
-        />
-
         <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-inner">
           <UploadCloud className="h-7 w-7" strokeWidth={2} />
         </div>

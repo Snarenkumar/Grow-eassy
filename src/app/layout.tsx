@@ -41,21 +41,31 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "GrowEasy AI CSV Importer",
-  "url": "https://groweasy-csv-importer.vercel.app/",
-  "description": "Upload any CRM lead CSV with any column names or layout and let AI intelligently map and extract details into the GrowEasy CRM format.",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "All",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "creator": {
-    "@type": "Organization",
-    "name": "GrowEasy",
-    "url": "https://groweasy.ai"
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "GrowEasy AI CSV Importer",
+    "url": "https://groweasy-csv-importer.vercel.app/",
+    "description": "Upload any CRM lead CSV with any column names or layout and let AI intelligently map and extract details into the GrowEasy CRM format.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "creator": { "@type": "Organization", "name": "GrowEasy", "url": "https://groweasy.ai" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to import leads from a CSV into GrowEasy CRM",
+    "description": "Upload any CSV file and convert it into clean CRM-ready leads using AI field mapping.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Upload your CSV", "text": "Go to /import. Drag-and-drop or click to select a .csv file." },
+      { "@type": "HowToStep", "position": 2, "name": "Preview the data", "text": "Review the raw CSV table. Confirm row and column counts." },
+      { "@type": "HowToStep", "position": 3, "name": "Run AI Mapping", "text": "Click Map with Gemini AI. Batches are processed sequentially." },
+      { "@type": "HowToStep", "position": 4, "name": "Review and export", "text": "Edit cells inline, then download the CRM-ready CSV or JSON." }
+    ]
   }
-};
+];
 
 export default function RootLayout({
   children,

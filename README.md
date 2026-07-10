@@ -1,181 +1,171 @@
-# GrowEasy AI CSV Importer
+﻿# GrowEasy AI CSV Importer
 
-> **AI-powered CRM lead importer** — Upload any CSV file (Facebook Lead Ads, Google Ads, Excel, real-estate CRM dumps, manually-built spreadsheets) and let AI map it into GrowEasy's canonical CRM lead format.
+> **AI-powered CRM lead importer** — Upload any CSV file (Facebook Lead Ads, Google Ads, Excel, real-estate CRM dumps, custom spreadsheets) and let Gemini map it into GrowEasy's canonical CRM lead format.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)
-![Gemini](https://img.shields.io/badge/Gemini%202.0-Flash-blue?logo=google)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-![Tailwind](https://img.shields.io/badge/Tailwind-v4-38bdf8?logo=tailwindcss)
-
----
-
-## ✨ Key Features
-
-| Feature | Details |
-|---|---|
-| **Drag & Drop Upload** | Drop any `.csv` file or click to browse. Up to 10 MB. |
-| **Client-Side Preview** | PapaParse renders a sticky-header, horizontally-scrollable table — no AI processing yet. |
-| **Streamed AI Mapping** | Rows are batched (20 per batch, 3 concurrent workers) and streamed via NDJSON SSE to the frontend for real-time progress. |
-| **Retry Mechanism** | Each batch automatically retries up to 2× with exponential backoff on Gemini API failures. |
-| **Inline Cell Editing** | Double-click any cell in the results table to correct values before downloading. |
-| **Visual Analytics** | SVG donut chart (imported vs. skipped ratio) and bar chart (CRM status distribution). |
-| **Dark Mode** | Toggle between light and dark themes with system preference detection. |
-| **Download Formats** | Export mapped leads as CRM-ready CSV or JSON. |
-| **SEO/GEO/AEO** | JSON-LD structured data, `robots.txt`, `sitemap.xml`, `llms.txt` (for AI search engines), and FAQ accordion. |
-| **Test CSV Included** | A pre-built messy CSV with edge cases is downloadable directly from the UI. |
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![Gemini](https://img.shields.io/badge/Gemini-2.5--flash-blue?logo=google)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript)
 
 ---
 
-## 🗂 Project Structure
+## URL Structure and Routing
+
+Every step of the import workflow has its own URL you can navigate to directly:
+
+| URL | Step | Description |
+|---|---|---|
+| `/` | Home | Landing page with How-to guide, FAQ, schema reference |
+| `/import` | Step 1 | Upload — Drag-and-drop or click to select a CSV file |
+| `/import/preview` | Step 2 | Preview — Review raw CSV table before processing |
+| `/import/process` | Step 3 | Process — Live batch AI extraction with progress bar |
+| `/import/results` | Step 4 | Results — Review, edit inline, download CSV/JSON |
+
+Navigation is enforced: if you visit /import/preview without having uploaded a file, you are redirected back to /import automatically.
+
+---
+
+## Quick Start
+
+### 1. Clone the repo
 
 ```
-├── public/
-│   ├── groweasy-test-leads.csv   # Downloadable test file
-│   ├── llms.txt                  # GEO: AI search engine documentation
-│   ├── robots.txt                # SEO: crawler rules
-│   └── sitemap.xml               # SEO: sitemap
-├── samples/
-│   ├── facebook-lead-ads-export.csv
-│   └── manual-spreadsheet.csv
-├── src/
-│   ├── app/
-│   │   ├── api/extract/route.ts  # Backend: SSE streaming extraction endpoint
-│   │   ├── globals.css           # Design system (light + dark palettes)
-│   │   ├── layout.tsx            # SEO metadata + JSON-LD
-│   │   └── page.tsx              # Main orchestrator (upload → preview → process → results)
-│   ├── components/
-│   │   ├── MappingVisual.tsx     # SVG field-mapping diagram
-│   │   ├── PreviewStep.tsx       # Raw CSV preview table
-│   │   ├── ProcessingStep.tsx    # Batch progress indicators
-│   │   ├── ResultsStep.tsx       # Editable results + charts + downloads
-│   │   ├── StepIndicator.tsx     # Header step dots
-│   │   └── ui/
-│   │       ├── Badge.tsx
-│   │       └── Button.tsx
-│   └── lib/
-│       ├── csv.ts                # PapaParse wrapper + CSV export
-│       ├── gemini.ts             # Gemini SDK client + batch processing + retry
-│       ├── prompt.ts             # System + user prompts for field mapping
-│       ├── types.ts              # CRM record types + event types
-│       └── utils.ts              # cn() utility
-├── .env.local                    # GEMINI_API_KEY (not committed)
-├── .env.example                  # Template for env vars
-├── package.json
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** ≥ 18
-- **npm** ≥ 9
-- A **Gemini API Key** (get one free at [aistudio.google.com](https://aistudio.google.com))
-
-### 1. Clone the repository
-
-```bash
 git clone https://github.com/Snarenkumar/Grow-eassy.git
 cd Grow-eassy
 ```
 
 ### 2. Install dependencies
 
-```bash
+```
 npm install
 ```
 
-### 3. Configure environment
+### 3. Add your Gemini API key
 
-Create a `.env.local` file in the project root:
+Create .env.local in the project root:
 
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
+```
+GEMINI_API_KEY=AIzaSy_YOUR_KEY_HERE
 ```
 
-### 4. Run the development server
+Get a free key at: https://aistudio.google.com/apikey
+Valid keys start with AIzaSy (39 characters).
 
-```bash
+NOTE: If you hit 429 errors, wait 1 minute. The app auto-retries with exponential backoff.
+
+### 4. Run the dev server
+
+```
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open http://localhost:3000
 
-### 5. Build for production
+---
 
-```bash
-npm run build
-npm start
+## How to Use — Step by Step
+
+### Step 1 — Upload (/import)
+
+- Go to http://localhost:3000/import
+- Drag-and-drop any .csv file onto the uploader, or click to open a file picker
+- Files up to 10 MB are supported
+- A sample CSV is at /groweasy-test-leads.csv
+
+### Step 2 — Preview (/import/preview)
+
+- A scrollable table renders the raw CSV with original column names
+- Row and column counts are shown in the header
+- Click "Map with Gemini AI" to start processing
+- Click "Change file" to go back and upload a different file
+
+### Step 3 — Process (/import/process)
+
+- Rows are split into batches of 20 and sent to gemini-2.5-flash sequentially
+- Live progress bar shows pending/running/retrying/done/failed per batch
+- Up to 3 auto-retries per batch with exponential backoff (5s, 10s, 20s)
+- Automatically navigates to results when complete
+
+### Step 4 — Results (/import/results)
+
+- Summary bar: Total rows, Imported, Skipped, Success rate, Mapped field count
+- Lead Distribution donut: Visual imported vs skipped ratio
+- CRM Status bar chart: Distribution of statuses
+- Audit Report: Phone-cleaning counts, country codes added, skipped-row reasons
+- Skipped log: Each skipped row's reason
+- Inline editing: Double-click any cell, press Enter to save or Escape to cancel
+- Download CRM CSV: Clean GrowEasy CRM format
+- Download JSON: Same data as JSON for developer use
+
+---
+
+## Project Structure
+
+```
+src/
+  app/
+    layout.tsx              Root layout: fonts, SEO metadata, JSON-LD
+    page.tsx                Homepage: hero, how-to steps, schema table, FAQ, CTA
+    globals.css             Design system: CSS tokens, dark mode, typography
+    import/
+      layout.tsx            Importer shell: header, step indicator, dark mode toggle
+      page.tsx              Step 1: UploadStep component
+      preview/
+        page.tsx            Step 2: PreviewStep component
+      process/
+        page.tsx            Step 3: Streams /api/extract, updates BatchProgress
+      results/
+        page.tsx            Step 4: ResultsStep component
+    api/
+      extract/
+        route.ts            POST -> NDJSON streaming, batch Gemini calls
+  components/
+    ui/                     Button, Badge, Tooltip, Progress, ProgressBar
+    UploadStep.tsx          Drag-and-drop upload + download test CSV
+    PreviewStep.tsx         Raw CSV table preview
+    ProcessingStep.tsx      Live batch progress tracker
+    ResultsStep.tsx         Stats, charts, editable table, exports
+  lib/
+    types.ts                CrmRecord, ExtractEvent, SkippedRow, ExtractionSummary
+    csv.ts                  Client-side CSV parser (papaparse)
+    gemini.ts               Gemini API: model config, retry logic, JSON extraction
+    utils.ts                cn() helper
+public/
+  groweasy-test-leads.csv   7-row sample with edge cases
+  robots.txt                SEO: allow all + sitemap reference
+  sitemap.xml               SEO: 5 URLs with lastmod and priority
+  llms.txt                  GEO: site context for AI crawlers
 ```
 
 ---
 
-## 🧪 How to Test
+## CRM Field Reference
 
-1. **Download the test CSV** directly from the UI or use `public/groweasy-test-leads.csv`.
-2. **Drag & Drop** the file into the upload zone.
-3. **Preview** the raw data table — verify columns and row count.
-4. Click **"Confirm & Run AI Mapping"**.
-5. Watch the progress bar and batch status indicators update in real time.
-6. On the **Results** screen:
-   - Check the donut chart and status distribution.
-   - Double-click any cell to edit it inline.
-   - Download as **CSV** or **JSON**.
-
-### Sample CSV files included
-
-| File | Description |
-|---|---|
-| `samples/facebook-lead-ads-export.csv` | Simulated Facebook Lead Ads export with multiple emails |
-| `samples/manual-spreadsheet.csv` | Manually built sheet with inconsistent columns |
-| `public/groweasy-test-leads.csv` | Full edge-case test file (mixed dates, missing contacts, duplicate phones) |
-
----
-
-## 🧠 AI Prompt Engineering
-
-The system prompt in `src/lib/prompt.ts` instructs Gemini to:
-
-- Map arbitrary column names using synonyms and content inference
-- Normalize dates to `new Date()`-compatible formats
-- Extract country codes (default `+91` for Indian numbers)
-- Merge extra emails/phones into `crm_note`
-- Enforce strict enum values for `crm_status` and `data_source`
-- Skip rows without email or phone
-- Return minified JSON for efficient parsing
+| CRM Field | Example Input Columns | Notes |
+|---|---|---|
+| name | Full Name, Client, Lead Name | Title-cased |
+| email | Email, E-mail, Contact | Primary; extras go to crm_note |
+| country_code | Country Code, Prefix | Default: +91 |
+| mobile_without_country_code | Phone, Mobile, Contact No. | Strips +91, spaces, brackets |
+| company | Company, Organisation | Trimmed |
+| city | City, Location | From location field |
+| state | State, Province | If available |
+| country | Country | Default: India |
+| lead_owner | Assigned To, Sales Owner | Name or email |
+| crm_status | Status, Stage | -> GOOD_LEAD_FOLLOW_UP, DID_NOT_CONNECT, BAD_LEAD, SALE_DONE |
+| crm_note | Notes, Remarks | Merged with pipe separator |
+| data_source | Source, Channel | -> leads_on_demand, meridian_tower, eden_park, varah_swamy, sarjapur_plots |
+| possession_time | Timeline, Possession | As-is |
+| description | Description, Requirements | Trimmed |
 
 ---
 
-## 🌐 SEO, GEO & AEO
+## Troubleshooting
 
-| Type | Implementation |
-|---|---|
-| **SEO** | `<title>`, `<meta description>`, Open Graph tags, JSON-LD `WebApplication` schema, `robots.txt`, `sitemap.xml` |
-| **GEO** (Generative Engine Optimization) | `/llms.txt` documents the CRM schema and AI rules so AI search engines can index and summarize the tool |
-| **AEO** (Answer Engine Optimization) | FAQ accordion section with structured Q&A for direct answer extraction by search engines |
+**429 Too Many Requests**
+Gemini free-tier rate limit hit. App retries automatically with 5s/10s/20s backoff. Affected rows are moved to Skipped.
 
----
+**All rows skipped**
+Check .env.local — GEMINI_API_KEY must start with AIzaSy. Keys starting with AQ. are OAuth tokens, not API keys.
 
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 16, React 19, TypeScript 5, Tailwind CSS v4 |
-| Backend | Next.js API Routes (Node.js runtime) |
-| AI | Google Gemini 2.0 Flash via `@google/generative-ai` |
-| CSV Parsing | PapaParse |
-| Icons | Lucide React |
-
----
-
-## 📝 Position Applied For
-
-**Software Developer Intern**
-
----
-
-## 📄 License
-
-This project was built as an assignment submission for GrowEasy.
+**CSV not parsing**
+File must be UTF-8 encoded with at least one header row. Files over 10 MB are rejected — split first.
