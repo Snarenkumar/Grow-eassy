@@ -7,6 +7,7 @@ import { UploadStep } from "@/components/UploadStep";
 import { PreviewStep } from "@/components/PreviewStep";
 import { ProcessingStep, type BatchProgress } from "@/components/ProcessingStep";
 import { ResultsStep } from "@/components/ResultsStep";
+import { Button } from "@/components/ui/Button";
 import { parseCsvFile, type ParsedCsv } from "@/lib/csv";
 import type { CrmRecord, ExtractEvent, ExtractionSummary, SkippedRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -75,6 +76,11 @@ export default function Home() {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
 
   const rowsPerBatchRef = useRef(BATCH_SIZE);
+
+  // Smooth scroll to uploader
+  const handleGetStarted = () => {
+    document.getElementById("importer-console")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Manage Dark Mode Theme
   useEffect(() => {
@@ -300,9 +306,44 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-8 sm:py-10">
-        {/* Step Container */}
-        <div className="bg-surface rounded-2xl border border-border shadow-card p-6 sm:p-8">
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-8 sm:py-12 space-y-16">
+        {/* Homepage Hero Section - only visible in upload stage */}
+        {stage === "upload" && (
+          <div className="text-center py-12 sm:py-16 max-w-4xl mx-auto space-y-6 animate-fade-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-surface text-[10px] font-mono font-bold uppercase tracking-widest text-ink-muted shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+              GrowEasy High-Contrast Ingest Console
+            </div>
+            
+            <h1 className="font-display font-black text-5xl sm:text-7xl uppercase tracking-tighter text-ink leading-none">
+              Format and Map <br />
+              <span className="text-accent bg-accent-soft/20 px-2.5 py-1 rounded inline-block mt-2">Any Lead CSV</span>
+            </h1>
+            
+            <p className="text-sm sm:text-base text-ink-muted max-w-2xl mx-auto leading-relaxed font-semibold">
+              Import Facebook exports, Google Ads leads, custom real estate spreadsheets, or marketing databases. No pre-formatted columns required. Let the ingestion engine parse names, validate phone formats, and organize remarks into CRM leads instantly.
+            </p>
+            
+            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button 
+                onClick={handleGetStarted}
+                className="w-full sm:w-auto px-8 py-4 rounded-xl text-sm font-black shadow-lg uppercase tracking-wider bg-accent text-accent-ink hover:opacity-90 active:scale-95 transition-all"
+              >
+                Get Started <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
+              <a
+                href="/groweasy-test-leads.csv"
+                download
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface text-ink px-8 py-4 text-sm font-bold hover:bg-paper transition-all active:scale-95 shadow-sm"
+              >
+                <Download className="h-4 w-4 text-ink-faint" /> Download Test CSV
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* Step Container (importer-console) */}
+        <div id="importer-console" className="bg-surface rounded-2xl border border-border shadow-card p-6 sm:p-8 scroll-mt-24 transition-all duration-300">
           {stage === "upload" && (
             <UploadStep onFileSelected={handleFileSelected} error={uploadError} />
           )}
@@ -345,21 +386,21 @@ export default function Home() {
 
         {/* Walkthrough, Download Templates, & FAQs - only visible in upload stage */}
         {stage === "upload" && (
-          <div className="mt-12 space-y-12">
-            {/* Quick Test Template download */}
+          <div className="space-y-16 pt-8">
+            {/* Quick Test Template download banner */}
             <div className="rounded-2xl border border-accent/20 bg-accent-soft/20 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="space-y-1">
-                <h3 className="font-display font-semibold text-lg text-ink flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5 text-accent" /> Need a file to test the importer?
+                <h3 className="font-display font-black text-lg text-ink flex items-center gap-2 uppercase tracking-tight">
+                  <FileSpreadsheet className="h-5 w-5 text-accent" /> Need a file to test?
                 </h3>
-                <p className="text-sm text-ink-muted max-w-2xl">
-                  Download our pre-built test CSV file containing messy columns, out-of-order fields, duplicate contacts, and missing values to see how the AI resolves them cleanly.
+                <p className="text-sm text-ink-muted max-w-2xl font-semibold">
+                  Download our pre-built test CSV file containing messy columns, out-of-order fields, duplicate contacts, and missing values to see how the engine resolves them cleanly.
                 </p>
               </div>
               <a
                 href="/groweasy-test-leads.csv"
                 download
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent text-accent-ink px-5 py-3 text-sm font-bold hover:opacity-90 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent text-accent-ink px-5 py-3.5 text-xs font-black uppercase tracking-wider hover:opacity-90 transition-all shadow-md shrink-0 active:scale-95"
               >
                 <Download className="h-4 w-4" /> Download Test CSV
               </a>
@@ -368,8 +409,9 @@ export default function Home() {
             {/* Interactive Step Explainer */}
             <div className="space-y-6">
               <div className="text-center max-w-xl mx-auto">
-                <h2 className="font-display text-2xl font-bold text-ink">How the AI CSV Importer Works</h2>
-                <p className="text-sm text-ink-muted mt-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-ink-faint bg-paper px-2 py-0.5 rounded">Core Pipeline</span>
+                <h2 className="font-display text-2xl font-bold text-ink mt-2">How the CSV Importer Works</h2>
+                <p className="text-sm text-ink-muted mt-1.5 leading-relaxed">
                   A simplified breakdown of how we map variable Excel or CSV exports into clean CRM lead contacts.
                 </p>
               </div>
@@ -385,10 +427,11 @@ export default function Home() {
             </div>
 
             {/* FAQ section */}
-            <div className="border-t border-border pt-10 space-y-6">
+            <div className="border-t border-border pt-12 space-y-6">
               <div className="text-center max-w-xl mx-auto">
-                <h2 className="font-display text-2xl font-bold text-ink">Frequently Asked Questions</h2>
-                <p className="text-sm text-ink-muted mt-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-ink-faint bg-paper px-2 py-0.5 rounded">Q&amp;A Hub</span>
+                <h2 className="font-display text-2xl font-bold text-ink mt-2">Frequently Asked Questions</h2>
+                <p className="text-sm text-ink-muted mt-1.5 leading-relaxed">
                   Common queries answered for Search Engines (AEO) and users alike.
                 </p>
               </div>
@@ -399,11 +442,11 @@ export default function Home() {
                       onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
                       className="w-full flex items-center justify-between px-5 py-4 text-left font-medium text-ink hover:bg-paper/40 transition-colors"
                     >
-                      <span className="text-[15px]">{faq.q}</span>
+                      <span className="text-[14px] font-semibold">{faq.q}</span>
                       <ChevronDown className={cn("h-4 w-4 text-ink-faint transition-transform duration-200", faqOpen === idx && "rotate-180")} />
                     </button>
                     {faqOpen === idx && (
-                      <div className="px-5 pb-4 pt-1.5 text-sm text-ink-muted leading-relaxed border-t border-border/40 bg-paper/10">
+                      <div className="px-5 pb-4 pt-1.5 text-xs text-ink-muted leading-relaxed border-t border-border/40 bg-paper/10">
                         {faq.a}
                       </div>
                     )}
