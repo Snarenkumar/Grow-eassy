@@ -80,6 +80,15 @@ export function UploadStep({ onFileSelected, error }: UploadStepProps) {
         </div>
       </div>
 
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={inputRef}
+        onChange={(e) => handleFiles(e.target.files)}
+        accept=".csv"
+        className="hidden"
+      />
+
       {error && (
         <div className="flex items-start gap-2.5 rounded-xl border border-danger/20 bg-danger-soft px-4 py-3 text-sm text-danger shadow-sm animate-fade-up">
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
