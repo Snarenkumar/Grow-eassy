@@ -1,0 +1,35 @@
+# GrowEasy AI CSV Importer - Specifications & Documentation
+
+The GrowEasy AI CSV Importer is a state-of-the-art tool that maps arbitrary CSV formats into a canonical CRM lead format using LLMs (specifically Google Gemini).
+
+## Key Features
+- **AI-Powered Mapping**: Automatically matches column headers, merges notes, identifies contact details, and formats timestamps.
+- **Dynamic Preview**: Previews the raw CSV before processing to ensure column count and row count are correct.
+- **Inline Editing**: Allows developers and agents to correct parsed records in a responsive spreadsheet table.
+- **Incremental SSE Streaming**: Streams progress in batches of 20 with concurrency control and error fallback.
+
+## Schema Specifications
+All uploaded records are matched to the following canonical CRM record structure:
+
+| Field | Type | Description |
+|---|---|---|
+| `created_at` | Date String | Parsed lead creation time (ISO 8601 or YYYY-MM-DD HH:mm:ss format). |
+| `name` | String | Customer's full name. |
+| `email` | String | Primary email address. Extra emails are appended to `crm_note`. |
+| `country_code` | String | Mobile country code (e.g., `+91`). Defaults to `+91` if Indian phone number. |
+| `mobile_without_country_code` | String | Digits-only phone number without spaces, dashes, or country code. |
+| `company` | String | Organization name. |
+| `city` | String | City name. |
+| `state` | String | State/Region. |
+| `country` | String | Country name. |
+| `lead_owner` | String | Email of the assigned representative. |
+| `crm_status` | Enum | Must be exactly: `GOOD_LEAD_FOLLOW_UP`, `DID_NOT_CONNECT`, `BAD_LEAD`, or `SALE_DONE`. |
+| `crm_note` | String | Notes, remarks, extra emails/phones, and unstructured details concatenated. |
+| `data_source` | Enum | Must be one of: `leads_on_demand`, `meridian_tower`, `eden_park`, `varah_swamy`, `sarjapur_plots`. |
+| `possession_time` | String | Target timeframe for property possession. |
+| `description` | String | Additional lead description. |
+
+## AI Processing Rules
+1. **Validation & Filtering**: A row is skipped if it has neither a usable email nor a mobile number.
+2. **Batch Processing**: The backend processes rows in chunks of 20, using a bounded pool for concurrency.
+3. **Escaping**: Literal newlines in string fields are replaced with `\n` to prevent CSV layout breakdown.

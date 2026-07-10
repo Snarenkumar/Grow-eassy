@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://groweasy-csv-importer.vercel.app/sitemap.xml
