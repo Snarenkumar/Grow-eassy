@@ -81,6 +81,18 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  background-image: 
+    radial-gradient(at 5% 5%, rgba(52, 82, 225, 0.04) 0px, transparent 40%),
+    radial-gradient(at 95% 5%, rgba(15, 143, 91, 0.04) 0px, transparent 40%),
+    radial-gradient(at 50% 95%, rgba(52, 82, 225, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+:root.dark body {
+  background-image: 
+    radial-gradient(at 5% 5%, rgba(88, 117, 245, 0.1) 0px, transparent 40%),
+    radial-gradient(at 95% 5%, rgba(18, 183, 122, 0.08) 0px, transparent 40%),
+    radial-gradient(at 50% 95%, rgba(88, 117, 245, 0.06) 0px, transparent 50%);
 }
 
 h1, h2, h3, h4 {
@@ -94,6 +106,13 @@ code, .font-data {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-strong) transparent;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  background: rgba(var(--color-surface), 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(var(--color-border), 0.5);
 }
 
 ::-webkit-scrollbar {
@@ -122,14 +141,40 @@ code, .font-data {
   to { stroke-dashoffset: -24; }
 }
 .mapping-line {
-  stroke-dasharray: 3 5;
-  animation: flow-dash 1.2s linear infinite;
+  stroke-dasharray: 4 6;
+  animation: flow-dash 1.5s linear infinite;
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-up {
-  animation: fade-up 0.35s ease-out both;
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+.float-anim {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.05); }
+}
+.pulse-glow-bg {
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+/* Table styling fixes */
+table {
+  border-spacing: 0;
+}
+th, td {
+  border-color: var(--color-border);
+}
+
